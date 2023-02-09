@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Larbi swagger", Version = "v1" });
 });
-//builder.Services.AddTransient<IActorRepository, ActorRepository>();
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -32,14 +32,8 @@ builder.Services.AddRazorPages();
 
 builder.Services
     .AddTransient<BookService>()
+    .AddTransient<AuthorService>()
     .AddScoped<IBookDbContext, BooksDbContext>();
-
-builder.Services.AddControllers().AddJsonOptions(x =>
-   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-
-
-
-
 
 
 var app = builder.Build();
@@ -70,6 +64,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
 app.MapControllers();
 
 app.Run();

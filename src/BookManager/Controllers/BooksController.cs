@@ -23,19 +23,17 @@ namespace BookManager.Controllers
             _bookservice = bookservice;
         }
 
-        //Get one book
-
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetBook(int id)
+        //Get one book by his Id
+        [HttpGet("{bookId:int}")]
+        public async Task<IActionResult> GetBook(int bookId)
         {
-            var book = await _bookservice.GetBookById(id);
+            var book = await _bookservice.GetBookById(bookId);
             return Ok(book);
         }
 
         // Add book
-
         [HttpPost("")]
-        public async Task<IActionResult> AddBook(Book book)
+        public async Task<IActionResult> AddBook([FromBody] Book book)
         {
 
             await _bookservice.AddBook(book);
@@ -43,7 +41,6 @@ namespace BookManager.Controllers
         }
 
         // Get all books
-
         [HttpGet("")]
         public List<Book> GetAllBooks()
         {
@@ -52,14 +49,12 @@ namespace BookManager.Controllers
         }
 
         // Update the fields title and description from one book
-
-        [HttpPut("{Bookid:int}")]
-        public async Task <IActionResult> UpdteBook(string description, string title, int Bookid)
+        [HttpPut("{bookId:int}")]
+        public async Task <IActionResult> UpdteBook(int bookId, [FromBody] BookUpdate bookupdated)
         {
-            var updatedBook = await _bookservice.UpdateBook(description, title, Bookid);
-            return Ok(updatedBook);
-           
-           
+            await _bookservice.UpdateBook(bookId, bookupdated);
+            return Ok(bookupdated);
+            
         }
     }
 }

@@ -62,37 +62,20 @@ namespace BookManager.Application
 			return booksList;
         }
 
-		public async Task <Book> UpdateBook(string description, string title, int Bookid)
+		public async Task UpdateBook(int id, BookUpdate bookupdated)
 		{
             var bookEntity = _bookDbContext.Books
 				.Include(b => b.Author)
-                .Where(b => b.Id == Bookid)
+                .Where(b => b.Id ==id)
                 .FirstOrDefault();
 
-
-			if(!String.IsNullOrEmpty(description))
-			{
-				bookEntity.Description = description;
-			}
-
-            if (!String.IsNullOrEmpty(title))
-            {
-                bookEntity.Title = title;
-            }
-
+			bookEntity.Description = bookupdated.Description;
+			bookEntity.Title = bookupdated.Title;
+  
             await _bookDbContext.SaveChangesAsync();
-
-            var book = new Book();
-            book.Title = bookEntity.Title;
-            book.Description = bookEntity.Description;
-			book.Author = bookEntity.Author.Name + " " + bookEntity.Author.Lastname;
-            book.AuthorId = bookEntity.AuthorId;
-
-            return book;
 
         }
 		
-
     }
 }
 
