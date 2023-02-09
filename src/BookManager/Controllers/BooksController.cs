@@ -7,6 +7,7 @@ using BookManager.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BookManager.Application.Models;
+using System.Net;
 
 namespace BookManager.Controllers
 {
@@ -14,13 +15,15 @@ namespace BookManager.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookkService _bookservice;
+        private readonly BookService _bookservice;
 
         public BooksController(
-            BookkService bookservice)
+            BookService bookservice)
         {
             _bookservice = bookservice;
         }
+
+        //Get one book
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetBook(int id)
@@ -29,12 +32,34 @@ namespace BookManager.Controllers
             return Ok(book);
         }
 
+        // Add book
+
         [HttpPost("")]
         public async Task<IActionResult> AddBook(Book book)
         {
 
             await _bookservice.AddBook(book);
             return Ok(book);
+        }
+
+        // Get all books
+
+        [HttpGet("")]
+        public List<Book> GetAllBooks()
+        {
+            return _bookservice.GetAllBooks();
+            
+        }
+
+        // Update the fields title and description from one book
+
+        [HttpPut("{Bookid:int}")]
+        public async Task <IActionResult> UpdteBook(string description, string title, int Bookid)
+        {
+            var updatedBook = await _bookservice.UpdateBook(description, title, Bookid);
+            return Ok(updatedBook);
+           
+           
         }
     }
 }

@@ -31,7 +31,7 @@ builder.Services.AddRazorPages();
 
 
 builder.Services
-    .AddTransient<BookkService>()
+    .AddTransient<BookService>()
     .AddScoped<IBookDbContext, BooksDbContext>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
