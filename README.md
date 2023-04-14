@@ -1,4 +1,4 @@
-# laboratorio
+# Laboratorio
 Laboratorio de API REST con persistencia en base de datos relacional SQL Server. Sigue las instrucciones y sube tu código a un repositorio git de tu elección.
 
 ## Requisitos
