@@ -7,7 +7,7 @@ namespace BookManager.Application
 {
 	public class BookService
 	{
-		private IBookDbContext _bookDbContext;
+		private readonly IBookDbContext _bookDbContext;
 
 		public BookService(IBookDbContext bookDbContext)
 		{
@@ -25,7 +25,7 @@ namespace BookManager.Application
 			var book = new Book();
 			if (bookEntity is null)
 			{
-				throw new ArgumentNullException (null, nameof(bookEntity));
+				throw new ArgumentNullException (nameof(bookEntity));
 			}
 			book.Title = bookEntity.Title;
 			book.Description = bookEntity.Description;

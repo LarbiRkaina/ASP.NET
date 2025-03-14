@@ -6,7 +6,7 @@ namespace BookManager.Application
 {
 	public class AuthorService
 	{
-        public IBookDbContext _bookDbContext;
+        private readonly IBookDbContext _bookDbContext;
 
         public AuthorService(IBookDbContext bookDbContext)
         {
