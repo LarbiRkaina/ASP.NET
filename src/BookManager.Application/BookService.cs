@@ -7,7 +7,7 @@ namespace BookManager.Application
 {
 	public class BookService
 	{
-		public IBookDbContext _bookDbContext;
+		private IBookDbContext _bookDbContext;
 
 		public BookService(IBookDbContext bookDbContext)
 		{
