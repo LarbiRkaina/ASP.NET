@@ -23,6 +23,10 @@ namespace BookManager.Application
                 .FirstOrDefaultAsync();
 
 			var book = new Book();
+			if (bookEntity is null)
+			{
+				throw new ArgumentNullException (null, nameof(bookEntity));
+			}
 			book.Title = bookEntity.Title;
 			book.Description = bookEntity.Description;
 			book.AuthorId = bookEntity.AuthorId;
