@@ -10,7 +10,7 @@ namespace BookManager
     public class BooksDbContext
         : DbContext, IBookDbContext
     {
-        private const string ConnectionString = "Server=localhost;Database=default;user=sa;password=Lem0nCode!;TrustServerCertificate=True";
+        private const string ConnectionString = "";
 
         public DbSet<BookEntity> Books { get; set; }
         public DbSet<AuthorEntity> Authors { get; set; }
