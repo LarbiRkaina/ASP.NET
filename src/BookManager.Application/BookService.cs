@@ -25,7 +25,7 @@ namespace BookManager.Application
 			var book = new Book();
 			if (bookEntity is null)
 			{
-				throw new ArgumentNullException (nameof(bookEntity));
+				throw new ArgumentNullException (nameof(id));
 			}
 			book.Title = bookEntity.Title;
 			book.Description = bookEntity.Description;
