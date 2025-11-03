@@ -2,14 +2,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-COPY *.sln .
-COPY **/*.csproj ./
-RUN dotnet restore
-
+# Copia TODO (incluye .sln y todos los .csproj)
 COPY . .
+
+# Restaura (ahora sí encuentra todo)
+RUN dotnet restore book-manager.sln
+
+# Publica
 RUN dotnet publish book-manager.sln -c Release -o /app/publish --no-restore
 
-# Etapa 2: Runtime (más pequeña)
+# Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
