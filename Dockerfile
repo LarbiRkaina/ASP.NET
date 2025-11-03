@@ -2,14 +2,20 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-# Copia TODO (incluye .sln y todos los .csproj)
-COPY . .
+# Copiar solución y proyectos
+COPY book-manager.sln .
 
-# Restaura (ahora sí encuentra todo)
+# Restaurar (usa rutas relativas)
 RUN dotnet restore book-manager.sln
 
-# Publica
-RUN dotnet publish book-manager.sln -c Release -o /app/publish --no-restore
+# Copiar TODO el código
+COPY . .
+
+# Publicar el proyecto correcto
+RUN dotnet publish src/Bookmanager/Bookmanager.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore
 
 # Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
@@ -19,4 +25,5 @@ COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
 
+# El .dll se llama como el proyecto: book-manager.dll
 ENTRYPOINT ["dotnet", "book-manager.dll"]
