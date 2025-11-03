@@ -1,4 +1,4 @@
-name: Build and Deploy .NET Desktop
+name: Build .NET
 
 on:
   push:
@@ -14,14 +14,17 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
+        
+    - name: Restore
+      run: dotnet restore src/BookManager.sln
+    
+    - name: Build
+      run: dotnet build /BookManager.sln --configuration Release
+    
+    - name: Publish
+      run: dotnet publish /BookManager.sln --configuration Release --output ./publish
 
-    - uses: microsoft/setup-msbuild@v2
-
-    - name: Build & Package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=Release /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4
       with:
-        name: MSIX Package
-        path: ${{ env.Wap_Project_Directory }}\AppPackages
+        name: Publish
+        path: ./publish
