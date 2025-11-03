@@ -13,7 +13,8 @@ jobs:
 
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
+         dotnet-version: 7.0.x
+         include-prerelease: false
         
     - name: Restore
       run: dotnet restore book-manager.sln
