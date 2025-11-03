@@ -1,31 +1,56 @@
-name: Build .NET
+name: Build & Dockerize .NET
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build-and-docker:
+    runs-on: ubuntu-latest  # ¡Ahora Linux! Más rápido y barato
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      with:
-         dotnet-version: 7.0.x
-         include-prerelease: false
-        
-    - name: Restore
-      run: dotnet restore book-manager.sln
-    
-    - name: Build
-      run: dotnet build book-manager.sln --configuration Release
-    
-    - name: Publish
-      run: dotnet publish book-manager.sln --configuration Release --output ./publish
+      # 1. Configurar .NET
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: Publish
-        path: ./publish
+      # 2. Restaurar y construir
+      - name: Restore & Build
+        run: |
+          dotnet restore book-manager.sln
+          dotnet build book-manager.sln --configuration Release --no-restore
+
+      # 3. Publicar
+      - name: Publish
+        run: dotnet publish book-manager.sln --configuration Release --output ./publish --no-build
+
+      # 4. Construir imagen Docker
+      - name: Build Docker image
+        run: |
+          docker build -t book-manager:${{ github.sha }} -t book-manager:latest .
+        # El Dockerfile está en la raíz
+
+      # 5. Probar la imagen (opcional pero potente)
+      - name: Test container starts
+        run: |
+          docker run -d -p 8080:8080 --name test-app book-manager:latest
+          sleep 10
+          curl -f http://localhost:8080/health || exit 1
+          docker stop test-app
+
+      # 6. Push a Docker Hub / GitHub Container Registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+          docker tag book-manager:latest ghcr.io/${{ github.repository }}/book-manager:latest
+          docker tag book-manager:latest ghcr.io/${{ github.repository }}/book-manager:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository }}/book-manager:latest
+          docker push ghcr.io/${{ github.repository }}/book-manager:${{ github.sha }}
